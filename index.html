@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html><html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>シニア向けおしゃべりアプリ</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/x-icon" href="img/favicon.ico">
+<script src="js/jquery-2.1.3.min.js"></script>
+</head>
+
+<body>
+<div class="wrapper">
+<header>
+    <h1>AIとおしゃべり</h1>
+</header>
+
+    <div id="chat-container">
+        <div id="messages"></div>
+        <input type="text" id="message-input" placeholder="メッセージを入力">
+   
+        <button id="send-button">送信</button>
+        <button id="delete-all-button">チャットを全て削除</button>
+
+    </div>
+<footer class="footer">
+    <img src="img/logo.png" alt="potz" class="logo"> 
+    <a href="https://potz.jp/">https://potz.jp/</a>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- axiosを追加 -->
+
+   
+    <script>
+    let userName = prompt("あなたの名前を入力してください:", "ゲスト");
+        if (!userName) {
+          userName = "ゲスト"; // ユーザーが名前を入力しない場合のデフォルト名
+        }
+        
+    // Firebaseの設定スクリプト
+const firebaseConfig = {
+    apiKey: "****",
+    authDomain: "****",
+    projectId: "p****",
+    storageBucket: "****",
+    messagingSenderId: "****",
+    appId: "****d"
+  };
+
+
+
+// Firebaseの初期化
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// DOM要素
+const messagesDiv = document.getElementById("messages");
+const input = document.getElementById("message-input");
+const sendButton = document.getElementById("send-button");
+
+// chatGPT設定スクリプト
+const API_KEY = '********';
+const URL = "https://api.openai.com/v1/chat/completions";
+// 日付の体裁
+function formatTimestamp(date) {
+    const y = date.getFullYear();
+    const m = ('0' + (date.getMonth() + 1)).slice(-2);
+    const d = ('0' + date.getDate()).slice(-2);
+    const hour = ('0' + date.getHours()).slice(-2);
+    const min = ('0' + date.getMinutes()).slice(-2);
+    return `${y}/${m}/${d} ${hour}:${min}`;
+}
+// メッセージを送信し、ChatGPTからの応答を取得して表示する
+sendButton.onclick = function() {
+    const text = input.value;
+    if (text.trim() === '') return; // 空のメッセージは無視
+    input.value = ''; // 入力フィールドをクリア
+
+    // ユーザーのメッセージをFirebaseに保存
+    saveMessage(userName, text);
+
+    // ChatGPTに問い合わせて応答を取得し、Firebaseに保存
+    getChatGPTResponse(text).then(response => {
+        saveMessage('POTZーAI', response);
+    }).catch(error => console.error("AI応答エラー:", error));
+};
+
+// メッセージをFirebaseに保存する関数
+function saveMessage(name, text) {
+    const now = new Date();
+    db.ref("messages/").push({
+        name: name,
+        text: text,
+        timestamp: formatTimestamp(now)
+    });
+}
+
+// ChatGPTからの応答を取得する関数
+async function getChatGPTResponse(text) {
+    const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: text }]
+        })
+    });
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
+
+// メッセージをリアルタイムで表示する
+db.ref("messages/").on("child_added", function(snapshot) {
+    const message = snapshot.val();
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
+    // ここでメッセージの送信者に応じてスタイルを変更する
+    messageElement.classList.add(message.name === "ユーザー名" ? "my-message" : "other-message");
+    messageElement.textContent = `${message.name}: ${message.text}`;
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // 最新のメッセージにスクロール
+});
+
+
+
+// 「チャットを全て削除」ボタンの参照を取得
+const deleteAllButton = document.getElementById("delete-all-button");
+
+// ボタンのクリックイベントリスナー
+deleteAllButton.onclick = function() {
+    // 確認ダイアログを表示
+    const confirmDelete = confirm("本当にチャットを全て削除しますか？この操作は取り消せません。");
+    if (confirmDelete) {
+        // Firebase Realtime Databaseから全てのメッセージを削除
+        db.ref("messages/").remove()
+        .then(function() {
+            console.log("チャットを全て削除しました。");
+            // 必要に応じてUIの更新や通知を行う
+        })
+        .catch(function(error) {
+            console.error("削除中にエラーが発生しました：", error);
+        });
+    }
+};
+
+    
+    
+    
+    
+    </script>
+</body>
+</html>

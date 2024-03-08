@@ -1,0 +1,94 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f3d892;
+}
+
+header, footer {
+    width: 100%;
+    text-align: center;
+    position: fixed;
+}
+
+header {
+    top: 0;
+}
+
+footer {
+    bottom: 0;
+    background-color: #f5cece;
+}
+
+div {
+    margin: 10px;
+}
+
+textarea.message {
+    width: calc(100% - 20px);
+    margin-bottom: 10px;
+}
+
+button#send {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+div#output p {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+div#output p img {
+    max-width: 100%;
+    height: auto;
+}
+
+p {
+    font-size: 18px;
+    color: #333;
+}
+
+p > br:first-child + span, p > br:first-child + img + span {
+    font-size: 14px;
+}
+
+.logo {
+    height: 50px; /* Adjust based on actual logo size */
+}
+
+@media screen and (max-width: 768px) {
+    textarea, button, input[type="file"] {
+        width: 100%;
+    }
+}
+
+.update-btn, .delete-btn {
+    margin: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.update-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.delete-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+.message-container {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+}

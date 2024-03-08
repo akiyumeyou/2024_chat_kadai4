@@ -1,0 +1,90 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;/*①高さの最小値*/
+    position: relative;/*②相対位置*/
+    background-color: #c4f0cf;
+}
+footer{
+    width: 100%;
+  
+    height: 40px;
+    position: fixed;/*相対位置*/
+    bottom: 0; /*下に固定*/
+    background-color: #f9ddc3;
+    color: #fff;
+    text-align: center;
+  }
+  .footer a, .footer img {
+    vertical-align: middle;
+  }
+  
+  .logo {
+    width: 35px;
+    height: 34px;
+  }
+  
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: scroll;
+}
+
+.message {
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 10px;
+}
+#message-input {
+    flex-grow: 0;
+    margin: 10px 0;
+    padding: 10px;
+    width: calc(100% - 20px); /* 左右いっぱいに表示 */
+  }
+.my-message {
+    background-color: rgb(98, 214, 252);
+    align-self: flex-end;
+}
+
+.other-message {
+    background-color: rgb(251, 250, 245);
+    align-self: flex-start;
+}
+
+#messageInput, #username {
+    margin: 10px 0;
+    padding: 10px;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+}
+
+#send-button {
+    margin: 10px 10px;
+    padding: 10px;
+    width: calc(100% - 20px); /* 左右いっぱいに表示 */
+    font-size: 16px; /* 高齢者向けの大きな文字 */
+    background-color: #067a23; /* 緑基調 */
+    color: white; /* 文字色 */
+    border: none;
+    border-radius: 5px;
+ 
+ }
+
+#delete-all-button {
+    margin: 10px 10px;
+    padding: 10px;
+    width: calc(100% - 20px); /* 左右いっぱいに表示 */
+    font-size: 16px; /* 高齢者向けの大きな文字 */
+    background-color: #ff4d4d; /* 警告色 */
+    color: white; /* 文字色 */
+    border: none;
+    border-radius: 5px;
+  }
